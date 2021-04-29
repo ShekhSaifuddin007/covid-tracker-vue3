@@ -39,11 +39,19 @@ export default {
     name: "DataBoxes",
     props: ['stats'],
 
-    methods: {
-        formatNumber(number) {
-            return number.toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    setup() {
+        const formatNumber = (number) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+        return {
+            formatNumber
         }
-    }
+    },
+
+    // methods: {
+    //     formatNumber(number) {
+    //         return number.toString()
+    //             .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    //     }
+    // }
 }
 </script>

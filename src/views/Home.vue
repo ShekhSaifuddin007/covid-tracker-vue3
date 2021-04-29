@@ -24,8 +24,9 @@
 
 <script>
 import DataTitle from "@/components/DataTitle";
-import DataBoxes from "../components/DataBoxes";
-import CountryDropdown from "../components/CountryDropdown";
+import DataBoxes from "@/components/DataBoxes";
+import CountryDropdown from "@/components/CountryDropdown";
+import { ref, onMounted } from 'vue';
 
 export default {
     name: 'Home',
@@ -35,43 +36,91 @@ export default {
         DataTitle
     },
 
-    data() {
-        return {
-            loading: true,
-            title: 'Global',
-            dataDate: '',
-            stats: {},
-            countries: [],
-            loadingImg: require('../assets/hourglass.gif')
-        }
-    },
+    setup() {
+        const loading = ref(true)
+        const title = ref('Global')
+        const dataDate = ref('')
+        const stats = ref({})
+        const countries = ref([])
+        const loadingImg = require('../assets/hourglass.gif')
 
-    mounted() {
-        this.fetchCovidData()
-    },
-
-    methods: {
-        fetchCovidData() {
+        const fetchCovidData = () => {
             axios.get('https://api.covid19api.com/summary')
                 .then(({data}) => {
-                    // console.log(data)
-                    this.dataDate = data.Date
-                    this.stats = data.Global
-                    this.countries = data.Countries
-                    this.loading = false
+                    dataDate.value = data.Date
+                    stats.value = data.Global
+                    countries.value = data.Countries
+                    loading.value = false
                 })
-        },
-        getCountry(country) {
-            this.stats = country
-            this.title = country.Country
-        },
-
-        async clearCountryData() {
-            this.loading = true
-            await this.fetchCovidData()
-            this.title = 'Global'
-            this.loading = false
         }
-    }
+
+        const getCountry = (country) => {
+            stats.value = country
+            title.value = country.Country
+        }
+
+        const clearCountryData = async () => {
+            loading.value = true
+            await fetchCovidData()
+            title.value = 'Global'
+            loading.value = false
+        }
+
+        onMounted(() => {
+            fetchCovidData()
+        })
+
+        return {
+            loading,
+            title,
+            dataDate,
+            stats,
+            countries,
+            loadingImg,
+            fetchCovidData,
+            getCountry,
+            clearCountryData
+        }
+    },
+
+    // vue 2 code here for reference ============>>
+
+    // data() {
+    //     return {
+    //         loading: true,
+    //         title: 'Global',
+    //         dataDate: '',
+    //         stats: {},
+    //         countries: [],
+    //         loadingImg: require('../assets/hourglass.gif')
+    //     }
+    // },
+
+    // mounted() {
+    //     this.fetchCovidData()
+    // },
+
+    // methods: {
+        // fetchCovidData() {
+        //     axios.get('https://api.covid19api.com/summary')
+        //         .then(({data}) => {
+        //             this.dataDate = data.Date
+        //             this.stats = data.Global
+        //             this.countries = data.Countries
+        //             this.loading = false
+        //         })
+        // },
+        // getCountry(country) {
+        //     this.stats = country
+        //     this.title = country.Country
+        // },
+
+        // async clearCountryData() {
+        //     this.loading = true
+        //     await this.fetchCovidData()
+        //     this.title = 'Global'
+        //     this.loading = false
+        // }
+    // }
 }
 </script>

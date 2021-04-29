@@ -1,5 +1,5 @@
 <template>
-    <select @change="onChange" v-model="selected" class="mt-10 block w-full border p-3 rounded">
+    <select @change="onChange" v-model="selected" class="mt-10 block w-full md:w-64 border p-3 rounded">
         <option value="0">Select Country</option>
         <option v-for="(country, index) in countries" :key="index" :value="country.ID">{{ country.Country }}</option>
     </select>
@@ -10,7 +10,11 @@ import { ref } from 'vue'
 
 export default {
     name: "CountryDropdown",
-    props: ['countries'],
+    props: {
+        countries: {
+            type: Array
+        }
+    },
 
     setup({countries}, {emit}) {
         const selected = ref(0)

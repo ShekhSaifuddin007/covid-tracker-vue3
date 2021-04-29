@@ -9,6 +9,7 @@
 
 <script>
 import moment from 'moment'
+import {computed} from "vue";
 
 export default {
     name: "DataTitle",
@@ -21,11 +22,21 @@ export default {
         }
     },
 
-    computed: {
-        timestamp() {
-            return moment(this.dataDate).format("MMMM Do YYYY, h:mm:ss a")
+    setup({dataDate}) {
+        const timestamp = computed(() =>
+            moment(dataDate).format("MMMM Do YYYY, h:mm:ss a")
+        )
+
+        return {
+            timestamp,
         }
-    }
+    },
+
+    // computed: {
+    //     timestamp() {
+    //         return moment(this.dataDate).format("MMMM Do YYYY, h:mm:ss a")
+    //     }
+    // }
 }
 </script>
 
